@@ -10,8 +10,8 @@ const generateHTML = (
     <button class="btn btn-outline-info ">
       <i class="fad fa-pencil"></i>
     </button>
-    <button class="btn btn-outline-danger" name=${taskData.id}>
-      <i class="fas fa-trash-alt" name=${taskData.id}></i>
+    <button class="btn btn-outline-danger" name=${taskData.id} onclick="deleteCard.apply(this, arguments)">
+      <i class="fas fa-trash-alt" name=${taskData.id} ></i>
     </button>
   </div>
   <div class="card-body">
@@ -84,7 +84,7 @@ const loadExistingCards = () => {
   const newCard = generateHTML(taskData);  
   insertToDOM(newCard);
 
-  //taskContainer.insertAdjacentHTML("beforeend", newCard);
+  taskContainer.insertAdjacentHTML("beforeend", newCard);
   });
   return;
 
@@ -99,5 +99,13 @@ const deleteCard = (event) => {
     globalTaskData = removeTask;
     
     saveToLocalstorage();
+
+    //access DOM to remove card
+    if(elementType == "BUTTON"){
+      return taskContainer.removeChild(
+        event.target.parentNode.parentNode.parentNode
+      );
+    }
+
     
 };
