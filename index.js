@@ -4,14 +4,14 @@ let globalTaskData = [];
 
 const generateHTML = (
   taskData
-) =>  ` <div id=${taskData.id} class="col-md-6 col-lg-4 my-4 ">
+) => { ` <div id=${taskData.id} class="col-md-6 col-lg-4 my-4 ">
 <div class="card">
   <div class="card-header gap-2 d-flex justify-content-end">
     <button class="btn btn-outline-info ">
       <i class="fad fa-pencil"></i>
     </button>
-    <button class="btn btn-outline-danger">
-      <i class="fas fa-trash-alt"></i>
+    <button class="btn btn-outline-danger" name=${taskData.id}>
+      <i class="fas fa-trash-alt" name=${taskData.id}></i>
     </button>
   </div>
   <div class="card-body">
@@ -25,7 +25,12 @@ const generateHTML = (
     <button class="btn btn-outline-primary">open task</button>
   </div>
 </div>
-</div> `;
+</div> `};
+
+const saveToLocalstorage = () => 
+localStorage.setItem("taskyCA" , JSON.stringify({ cards: globalTaskData}));
+
+
 const insertToDOM = (content) =>
   taskContainer.insertAdjacentHTML("beforeend", newCard);
 
@@ -43,19 +48,12 @@ const addNewCard = () => {
 
     globalTaskData.push(taskData);
 
-//update local storage
-
-    localStorage.setItem("taskyCA" , JSON.stringify({ cards: globalTaskData}));
-
+    saveToLocalstorage();
 
 //generate html code
 const newCard = generateHTML(taskData);
 
 insertToDOM(newCard);
-
-taskContainer.insertAdjacentHTML("beforeend", newCard);
-
-
 
 
 //clear the form
@@ -86,9 +84,20 @@ const loadExistingCards = () => {
   const newCard = generateHTML(taskData);  
   insertToDOM(newCard);
 
-  // taskContainer.insertAdjacentHTML("beforeend", newCard);
+  //taskContainer.insertAdjacentHTML("beforeend", newCard);
   });
   return;
 
 
+};
+
+const deleteCard = (event) => {
+    const targetID = event.target.getAttribute("name");
+    const elementType = event.target.tagName;
+
+    const removeTask = globalTaskData.filter((task) => task.id !== targetID);
+    globalTaskData = removeTask;
+    
+    saveToLocalstorage();
+    
 };
